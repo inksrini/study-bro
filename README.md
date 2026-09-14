@@ -21,6 +21,24 @@ The phone is detected using YOLO, while MediaPipe Hand Landmarker is used to det
 
 ### Clone the repository
 
-```bash
+```markdown
 git clone https://github.com/inksrini/study-bro.git
 cd study-bro
+
+```
+### Install the required packages
+```markdown
+python -m pip install -r requirements.txt
+```
+### The project requires OpenCV, Ultralytics, and MediaPipe.
+```markdown
+Run the program
+python main.py
+```
+### On the first run, the required hand landmark model is downloaded automatically.
+
+
+# Why I Built It
+
+I wanted to learn more about computer vision by building something practical around a problem I actually have getting distracted by my phone while studying.
+The KFC careers page is the final punishment, because if studying doesn't work out, I might as well start applying somewhere.
