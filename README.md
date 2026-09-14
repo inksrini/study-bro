@@ -1,175 +1,71 @@
+study Bro Guard
 
-# Study Bro Guard v4 — Actual Hand Detection 💀
+A computer vision project that detects when I am using my phone while I am supposed to be studying.
 
-v4 changes the definition of "phone in hand".
+The program uses a webcam to detect a smartphone and track hand landmarks. When the phone is detected in my hand for a certain amount of time, it triggers a warning and eventually opens the KFC careers page.
 
-Earlier versions used body pose:
+How It Works
+Phone detected
+      +
+Hand landmarks detected
+      ↓
+Phone is detected in the hand
+      ↓
+Timer starts
+      ↓
+First warning
+      ↓
+After the set time
+      ↓
+Final warning
+      ↓
+KFC careers page opens
 
-```text
-phone close to wrist/elbow
-        ↓
-assume phone is in hand
-```
+The phone is detected using YOLO, while MediaPipe Hand Landmarker is used to detect 21 landmarks on the hand. The program checks how many hand landmarks are inside or close to the detected phone area to determine whether the phone is being held.
 
-That is only a heuristic.
+Technologies Used
+Python
+OpenCV
+YOLO (Ultralytics)
+MediaPipe
+Installation
 
-This version uses the **MediaPipe Hand Landmarker**, which detects
-21 landmarks on each hand: wrist, thumb joints/tip, and finger
-joints/tips.
+Clone the repository:
 
-The program now does:
+git clone https://github.com/inksrini/study-bro.git
+cd study-bro
 
-```text
-Detect phone
-     +
-Detect hand landmarks
-     +
-At least 3 hand landmarks are inside/very close
-to the phone box
-     ↓
-PHONE IN HAND
-```
+Install the required packages:
 
-## Install
-
-You already have Ultralytics and OpenCV.
-
-Install MediaPipe:
-
-```bash
-python -m pip install mediapipe
-```
-
-Or:
-
-```bash
 python -m pip install -r requirements.txt
-```
 
-The current MediaPipe package has Windows x86-64 wheels available,
-and MediaPipe's Hand Landmarker API supports image/video/live-stream
-hand landmark detection. The hand model is downloaded automatically
-by this project the first time it runs.
+The project requires OpenCV, Ultralytics, and MediaPipe.
 
-## Run
+Run the program:
 
-```bash
 python main.py
-```
 
-First run:
-- downloads `hand_landmarker.task`
-- loads the phone detector
-- opens the webcam
+On the first run, the required hand landmark model is downloaded automatically.
 
-The model comes from Google's official MediaPipe model URL.
+Configuration
 
-## Debug screen
+The detection sensitivity and warning timings can be changed in main.py.
 
-You should see:
-
-```text
-RED BOX        = phone detection
-GREEN POINTS   = the 21 hand landmarks
-PHONE IN HAND  = actual trigger state
-```
-
-You will also see:
-
-```text
-Hand points near phone: X
-Trigger needs: 3
-```
-
-This is extremely useful for tuning.
-
-### Example
-
-```text
-Hand points near phone: 7
-Trigger needs: 3
-```
-
-=> trigger.
-
-```text
-Hand points near phone: 1
-Trigger needs: 3
-```
-
-=> no trigger.
-
-## Tuning
-
-At the top of `main.py`:
-
-```python
+PHONE_CONFIDENCE = 0.30
 HAND_MARGIN = 35
 MIN_HAND_LANDMARKS_NEAR_PHONE = 3
-```
 
-### HAND_MARGIN
-
-Larger:
-
-```python
-HAND_MARGIN = 60
-```
-
-More forgiving.
-
-Smaller:
-
-```python
-HAND_MARGIN = 20
-```
-
-More strict.
-
-### MIN_HAND_LANDMARKS_NEAR_PHONE
-
-Larger:
-
-```python
-MIN_HAND_LANDMARKS_NEAR_PHONE = 5
-```
-
-Harder to trigger.
-
-Smaller:
-
-```python
-MIN_HAND_LANDMARKS_NEAR_PHONE = 2
-```
-
-Easier to trigger.
-
-Do NOT immediately crank these values around randomly.
-Look at the debug counter first.
-
-## Important limitation
-
-This is substantially better than the old wrist/elbow method, but
-it still isn't mathematically guaranteed to prove a person is gripping
-the phone.
-
-The webcam sees a 2D image. Fingers can be hidden behind the phone,
-and the phone can occlude landmarks.
-
-For an even more bulletproof system, the next level would be temporal
-tracking + phone/hand bounding-box geometry + finger visibility +
-multiple-frame confirmation.
-
-## Timing
-
-```python
 FIRST_WARNING_SECONDS = 3
 KFC_SECONDS = 8
-```
 
-For your final system you might prefer:
+HAND_MARGIN controls how close a hand landmark needs to be to the phone, while MIN_HAND_LANDMARKS_NEAR_PHONE controls how many landmarks are required before the program considers the phone to be in the hand.
 
-```python
-FIRST_WARNING_SECONDS = 8
-KFC_SECONDS = 16
-```
+Limitations
+
+The system works with a 2D webcam image, so fingers can be hidden behind the phone or partially blocked from view. Because of this, the detection is not guaranteed to be accurate in every situation.
+
+Why I Built It
+
+I wanted to learn more about computer vision by building something practical around a problem I actually have: getting distracted by my phone while studying.
+
+The KFC careers page is there as a final punishment because apparently normal motivation was not enough.
