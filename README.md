@@ -17,6 +17,15 @@ The phone is detected using YOLO, while MediaPipe Hand Landmarker is used to det
 - YOLO (Ultralytics)
 - MediaPipe
 
+## Preview
+
+![](ss/1.png)
+
+![](ss/2.png)
+
+![](ss/3.png)
+
+
 ## Installation
 
 ### Clone the repository
